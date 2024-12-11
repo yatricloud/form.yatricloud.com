@@ -1,0 +1,68 @@
+export const questions = [
+  {
+    id: 'email',
+    question: 'What is your email address?',
+    type: 'email' as const,
+    placeholder: 'name@example.com',
+  },
+  {
+    id: 'firstName',
+    question: 'What is your first name?',
+    type: 'text' as const,
+    placeholder: 'John',
+  },
+  {
+    id: 'lastName',
+    question: 'What is your last name?',
+    type: 'text' as const,
+    placeholder: 'Doe',
+  },
+  {
+    id: 'country',
+    question: 'Which country are you located in?',
+    type: 'select' as const,
+    options: [
+      'United States',
+      'United Kingdom',
+      'Canada',
+      'Australia',
+      'Germany',
+      'France',
+      'Japan',
+      'Other',
+    ],
+  },
+  {
+    id: 'state',
+    question: 'Which state/province are you located in?',
+    type: 'text' as const,
+    placeholder: 'Enter your state or province',
+  },
+  {
+    id: 'linkedinProfile',
+    question: 'Your LinkedIn Profile URL',
+    type: 'url' as const,
+    placeholder: 'https://linkedin.com/in/your-profile',
+    description: 'Please provide your LinkedIn profile URL',
+  },
+  {
+    id: 'certificationLink',
+    question: 'Certificate Credential Link',
+    type: 'url' as const,
+    placeholder: 'https://example.com/certification',
+    description: 'Link to your certification credentials for approval',
+  },
+  {
+    id: 'joinCommunity',
+    question: 'Would you like to join our General Yatri community?',
+    type: 'checkbox' as const,
+    description: 'Join our community to stay updated with the latest news and events',
+  },
+  {
+    id: 'review',
+    question: 'Your Review',
+    type: 'textarea' as const,
+    placeholder: 'Share your thoughts and feedback with us',
+    description: 'Help us improve by sharing your experience',
+  },
+];
