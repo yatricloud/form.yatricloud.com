@@ -1,45 +1,51 @@
-import axios from 'axios';
-import { API_CONFIG } from './config';
-import { SurveyData, ApiResponse } from './types';
-import { delay, validateScriptUrl, formatSurveyData } from './helpers';
+import { createClient } from '@supabase/supabase-js';
+import { SurveyData } from './types';
+import { validateSurveyData } from './validation';
+import { ApiError, ValidationError } from './errors';
 
-export async function submitSurvey(
-  data: SurveyData, 
-  attemptNumber = 1
-): Promise<boolean> {
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('Missing Supabase credentials');
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+export async function submitSurvey(data: SurveyData): Promise<boolean> {
   try {
-    validateScriptUrl(API_CONFIG.SCRIPT_URL);
-    const formattedData = formatSurveyData(data);
-
-    // Create form data for submission
-    const formData = new FormData();
-    Object.entries(formattedData).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    // Use fetch API instead of axios for better CORS handling
-    const response = await fetch(API_CONFIG.SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: formData,
-    });
-
-    // Since we're using no-cors, we won't get a JSON response
-    // We'll assume success if the request doesn't throw
-    return true;
-
-  } catch (error) {
-    console.error(`Attempt ${attemptNumber} failed:`, error);
+    validateSurveyData(data);
     
-    if (attemptNumber < API_CONFIG.RETRY_ATTEMPTS) {
-      await delay(API_CONFIG.RETRY_DELAY);
-      return submitSurvey(data, attemptNumber + 1);
+    const formattedData = {
+      email: data.email,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      contact_number: data.contactNumber,
+      country: data.country,
+      state: data.state || null,
+      address: data.address || null,
+      gender: data.gender,
+      linkedin_profile: data.linkedinProfile || null,
+    };
+
+    const { error } = await supabase
+      .from('survey_responses')
+      .insert([formattedData]);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      if (error.code === '23505') {
+        throw new ValidationError('This email has already been registered');
+      }
+      throw new ApiError(error.message);
     }
-    
-    throw new Error(
-      error instanceof Error 
-        ? error.message 
-        : 'Failed to submit survey data after multiple attempts'
-    );
+
+    return true;
+  } catch (error) {
+    if (error instanceof ValidationError || error instanceof ApiError) {
+      throw error;
+    }
+    console.error('Submission error:', error);
+    throw new ApiError('Failed to submit survey');
   }
 }

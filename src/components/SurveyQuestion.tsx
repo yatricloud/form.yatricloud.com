@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import React, { useState } from 'react';
+import React from 'react';
 import { SurveyQuestion as QuestionType } from '../types/survey';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Loader2 } from 'lucide-react';
 import { QuestionInput } from './inputs/QuestionInput';
 import { Background } from './ui/Background';
 
@@ -11,10 +11,22 @@ interface Props {
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
+  onBack: () => void;
+  error?: string;
+  isSubmitting?: boolean;
+  isFirstQuestion: boolean;
 }
 
-export const SurveyQuestion: React.FC<Props> = ({ question, value, onChange, onSubmit }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export const SurveyQuestion: React.FC<Props> = ({ 
+  question, 
+  value, 
+  onChange, 
+  onSubmit,
+  onBack,
+  error,
+  isSubmitting = false,
+  isFirstQuestion
+}) => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
@@ -25,13 +37,11 @@ export const SurveyQuestion: React.FC<Props> = ({ question, value, onChange, onS
     return sum % 4;
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    try {
-      await onSubmit();
-    } finally {
-      setIsSubmitting(false);
-    }
+  const isDisabled = () => {
+    if (isSubmitting) return true;
+    if (error) return true;
+    if (!value.trim()) return true;
+    return false;
   };
 
   return (
@@ -58,7 +68,7 @@ export const SurveyQuestion: React.FC<Props> = ({ question, value, onChange, onS
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
-              className="text-white mb-6"
+              className="text-white/80 mb-6"
             >
               {question.description}
             </motion.p>
@@ -74,7 +84,8 @@ export const SurveyQuestion: React.FC<Props> = ({ question, value, onChange, onS
               question={question}
               value={value}
               onChange={onChange}
-              onSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              error={error}
             />
           </motion.div>
 
@@ -82,14 +93,26 @@ export const SurveyQuestion: React.FC<Props> = ({ question, value, onChange, onS
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="mt-8 flex flex-col items-center gap-4"
+            className="mt-8 flex items-center justify-between gap-4"
           >
+            {!isFirstQuestion && (
+              <button
+                onClick={onBack}
+                className="group flex items-center gap-2 px-8 py-3 bg-github-dark-secondary rounded-lg transition-all duration-300 hover:bg-github-dark-secondary/90"
+              >
+                <ArrowLeft className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-1" />
+                <span>Back</span>
+              </button>
+            )}
+            
             <button
-              onClick={handleSubmit}
-              disabled={!value || isSubmitting}
-              className={`group relative flex items-center gap-2 px-8 py-3 bg-[#0a66c2] rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(10,102,194,0.5)] hover:shadow-[0_0_20px_rgba(10,102,194,0.7)] ${
-                value && !isSubmitting ? 'hover:bg-[#0a66c2]/90' : 'opacity-50 cursor-not-allowed'
-              }`}
+              onClick={onSubmit}
+              disabled={isDisabled()}
+              className={`group relative flex items-center gap-2 px-8 py-3 bg-[#0a66c2] rounded-lg transition-all duration-300 ml-auto
+                ${isDisabled() 
+                  ? 'opacity-50 cursor-not-allowed' 
+                  : 'hover:bg-[#0a66c2]/90 shadow-[0_0_15px_rgba(10,102,194,0.5)] hover:shadow-[0_0_20px_rgba(10,102,194,0.7)]'
+                }`}
             >
               <span className="relative z-10">
                 {isSubmitting ? (
@@ -103,13 +126,13 @@ export const SurveyQuestion: React.FC<Props> = ({ question, value, onChange, onS
               )}
               <div className="absolute inset-0 bg-gradient-to-r from-[#0a66c2] to-[#0a66c2]/70 rounded-lg opacity-50 blur-sm" />
             </button>
-
-            {(question.type === 'email' || question.type === 'text' || question.type === 'url') && (
-              <p className="text-sm text-white">
-                Press Enter ↵ to continue
-              </p>
-            )}
           </motion.div>
+
+          {(question.type === 'email' || question.type === 'text' || question.type === 'url') && !error && (
+            <p className="text-sm text-white/70 text-center mt-4">
+              Press Enter ↵ to continue
+            </p>
+          )}
         </div>
       </motion.div>
     </Background>

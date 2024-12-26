@@ -22,9 +22,9 @@ export const WelcomeScreen: React.FC<Props> = ({ onStart }) => {
           transition={{ duration: 0.8 }}
           className="mb-12"
         >
-          <img 
-            src="https://dev.yatricloud.com/assets/img/yatricloud.png" 
-            alt="Yatri Cloud Logo" 
+          <img
+            src="https://dev.yatricloud.com/assets/img/yatricloud.png"
+            alt="Yatri Cloud Logo"
             className="w-48 h-auto mb-6"
           />
         </motion.div>
@@ -35,7 +35,7 @@ export const WelcomeScreen: React.FC<Props> = ({ onStart }) => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-6xl font-bold text-white mb-8"
         >
-          Welcome to Yatri Cloud Survey
+          Yatri Goodies Week
         </motion.h1>
 
         <motion.p
@@ -44,7 +44,7 @@ export const WelcomeScreen: React.FC<Props> = ({ onStart }) => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-xl text-white mb-12 max-w-2xl"
         >
-          Help us understand your needs and improve our services
+          Hello Yatris👋
         </motion.p>
 
         <motion.button
@@ -56,7 +56,7 @@ export const WelcomeScreen: React.FC<Props> = ({ onStart }) => {
           onClick={onStart}
           className="relative px-12 py-4 bg-[#0a66c2] hover:bg-[#0a66c2]/90 text-white text-xl rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(10,102,194,0.5)] hover:shadow-[0_0_20px_rgba(10,102,194,0.7)]"
         >
-          <span className="relative z-10">Start Survey</span>
+          <span className="relative z-10">Start Here</span>
           <div className="absolute inset-0 bg-gradient-to-r from-[#0a66c2] to-[#0a66c2]/70 rounded-lg opacity-50 blur-sm" />
         </motion.button>
 

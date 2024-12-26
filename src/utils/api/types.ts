@@ -3,7 +3,15 @@ export interface SurveyData {
 }
 
 export interface ApiResponse {
-  result: 'success' | 'error';
-  message?: string;
-  error?: string;
+  status: 'success' | 'error';
+  message: string;
+  code?: number;
+  timestamp: string;
+}
+
+export interface ApiErrorResponse {
+  status: 'error';
+  code: number;
+  message: string;
+  timestamp: string;
 }
