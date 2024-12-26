@@ -9,19 +9,19 @@ export const questions = [
     id: 'firstName',
     question: 'What is your first name?',
     type: 'text' as const,
-    placeholder: 'John',
+    placeholder: 'Yatharth',
   },
   {
     id: 'lastName',
     question: 'What is your last name?',
     type: 'text' as const,
-    placeholder: 'Doe',
+    placeholder: 'Chauhan',
   },
   {
     id: 'contactNumber',
     question: 'What is your contact number?',
     type: 'text' as const,
-    placeholder: '+1234567890',
+    placeholder: '+91 1234567890',
   },
   {
     id: 'country',
@@ -31,7 +31,7 @@ export const questions = [
   },
   {
     id: 'state',
-    question: 'Which state/province are you located in?',
+    question: 'Which state are you located in?',
     type: 'text' as const,
     placeholder: 'Enter your state or province',
   },
