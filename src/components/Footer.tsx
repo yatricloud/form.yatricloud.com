@@ -9,7 +9,7 @@ export const Footer: React.FC<FooterProps> = ({ className = '' }) => {
         <p className="text-sm text-gray-400">
           © 2025 Yatri Cloud. All rights reserved.
         </p>
-        <a
+        {/* <a
           href="https://linkedin.com/company/yatri-cloud"
           target="_blank"
           rel="noopener noreferrer"
@@ -17,7 +17,7 @@ export const Footer: React.FC<FooterProps> = ({ className = '' }) => {
         >
           <Linkedin size={20} />
           <span>Follow on LinkedIn</span>
-        </a>
+        </a> */}
       </div>
     </footer>
   );
